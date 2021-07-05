@@ -1,0 +1,62 @@
+import mouse as m 
+import keyboard as k 
+import time
+import os
+import pickle
+
+def clicker(cldwn, cntfClcks):
+	for i in cntfClcks:
+		time.sleep(cldwn)
+		m.click()
+
+while True:
+	welcomeScreen = input('Добро пожаловать в AutoClicker 1.0! Введите 1 для выбора профиля, 2 для активации кликера без профиля: ')
+
+	if welcomeScreen == '1':
+		try:
+			chooseProfile = input('Введите название вашего профиля. Если вы не создали ни одного профиля, введите "Создать профиль": ')
+			if chooseProfile.find('оздать профиль') != -1:
+				profileHotKey = input('Введите горячую клавишу для активации кликера: ')
+				profileName = input('Введите имя нового профиля: ')
+				profileCoolDown = float(input('Введите, с какой задержкой будут регистрироваться клики: '))
+				profileCountOfClicks = int(input('Введите число кликов: '))
+				profileCountOfClicks = 'a' * profileCountOfClicks
+				with open(profileName + 'hotkey' + '.data', 'wb') as f:
+					pickle.dump(profileHotKey, f)
+				with open(profileName + 'name' + '.data', 'wb') as f:
+					pickle.dump(profileName, f)
+				with open(profileName + 'cooldown' + '.data', 'wb') as f:
+					pickle.dump(profileCoolDown, f)
+				with open(profileName + 'countofclicks' + '.data', 'wb') as f:
+					pickle.dump(profileCountOfClicks, f)
+			else:
+				try:
+					with open(chooseProfile + 'hotkey' + '.data', 'rb') as a:
+						with open(chooseProfile + 'name' + '.data', 'rb') as b:
+							with open(chooseProfile + 'cooldown' + '.data', 'rb') as c:
+								with open(chooseProfile + 'countofclicks' + '.data', 'rb') as d:
+										currentProfileHotKey = pickle.load(a)
+										currentProfileName = pickle.load(b)
+										currentProfilecooldown = pickle.load(c)
+										currentProfileCountOfClicks = pickle.load(d)
+										k.add_hotkey(currentProfileHotKey,lambda: clicker(currentProfilecooldown,currentProfileCountOfClicks))
+										k.wait('Esc')
+				except:
+					print('Что-то пошло не так...')
+		except:
+			print('Что-то пошло не так...')
+	elif welcomeScreen == '2':
+		try:
+			hotKey = input('Введите горячую клавишу для активации кликера: ')
+			coolDown = float(input('Введите, с какой задержкой будут регистрироваться клики: '))
+			countOfClicks = int(input('Введите число кликов: '))
+			countOfClicks = 'a' * countOfClicks
+			k.add_hotkey(hotKey, lambda: clicker(coolDown,countOfClicks))
+			k.wait('Esc')
+		except:
+			print('Что-то пошло не так...')
+
+
+
+				
+
